@@ -4,6 +4,9 @@ def informacion(cadena):
     probs = probabilidades(cadena)
     informacion = {
         simbolo: round(-math.log(probs[simbolo], 2), 4) for simbolo in probs
+        #math.log(NUM, -1), 2) 
+        # ES LO MISMO QUE 
+        #-math.log(NUM, 2)
     }
     return informacion      #en formato {"a":1.5851, "b":0.4307}
 
