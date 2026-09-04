@@ -12,7 +12,9 @@ def informacion(cadena):
 
 def entropia(cadena):
     probs = probabilidades(cadena)
+    print("probs", probs)
     info = informacion(cadena)
+    print("info", info)
     entropia = 0
     for simbolo in probs:
         entropia += probs[simbolo] * info[simbolo]
@@ -42,4 +44,4 @@ def alfabeto(cadena):
 
     return alfabeto #en formato ["a", "b", "c"]
 
-print(informacion("100"))
+print(entropia("ABDAACAABACADAABDAADABDAAABDCDCDCDC"))
