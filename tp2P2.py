@@ -33,8 +33,8 @@ def generarCadena(N, alf, probs):
 
 
 
-alfabeto, probs = alfabetoYprob("hola gente")
+alfabeto, probs = alfabetoYprob("aaabbc")
 
 cadenaGenerada = generarCadena(30, alfabeto, probs)
 
-print(cadenaGenerada)
+print(probs)
