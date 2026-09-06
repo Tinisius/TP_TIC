@@ -4,7 +4,7 @@ def informacion(cadena):
     probs = probabilidades(cadena)
     informacion = {
         simbolo: round(-math.log(probs[simbolo], 2), 4) for simbolo in probs
-        #math.log(NUM, -1), 2) 
+        #math.log(pow(NUM, -1), 2) 
         # ES LO MISMO QUE 
         #-math.log(NUM, 2)
     }
