@@ -1,11 +1,5 @@
-def afa(cadena):
-    repeticiones = {}
+from functions import esInstantaneo
 
-    for char in cadena:
-        print(char)
-        repeticiones[char] = repeticiones.get(char, 0) + 1
+fuente = ["a", "bc", "cd", "d"]
 
-    print(repeticiones)
-
-cad = "aaaaab"
-afa(cad)
+print(esInstantaneo(fuente))
