@@ -1,42 +1,22 @@
 import math
 #import random
+from functions.functions import *
 
-def generarExtensionFuente(alfabeto, probabilidades, n):
-    alfabetoExtendido = []
-    probabilidadesExtendido = []
-    posiciones = [0] * n
-    carry = 0
-    q = len(alfabeto)
-
-    while (carry != 1):
-        # construir la palabra extendida y la probabilidad
-        print(posiciones)
-        palabra = ""
-        prob = 1
-        for pos in posiciones:
-            palabra += alfabeto[pos]
-            prob *= probabilidades[pos]
-
-        alfabetoExtendido.append(palabra)
-        probabilidadesExtendido.append(prob)
-
-        # avanzar la posición
-        if (posiciones[n-1] + 1 < q):
-            posiciones[n-1] += 1 
+def alfabetoYprob(cadena):
+    #dado un STRING devuelve 2 arreglos paralelos ALF y PROB
+    alfabeto = []
+    repeticiones = []
+    for char in cadena:
+        if char in alfabeto:
+            i = alfabeto.index(char)
+            repeticiones[i] += 1
         else:
-            posiciones[n-1] = 0
-            carry = 1
-            i = n - 2 
-            while (carry == 1 and i >= 0):
-                if (posiciones[i] + 1 < q):
-                    posiciones[i] += 1
-                    carry = 0
-                else:
-                    posiciones[i] = 0
-                    carry = 1
-                    i -= 1
-            
-    return alfabetoExtendido, probabilidadesExtendido
+            alfabeto.append(char)
+            repeticiones.append(1)
+
+    probs = [count / len(cadena) for count in repeticiones]
+
+    return alfabeto, probs
 
 def generarFuente(cadena):
     alfabeto = []

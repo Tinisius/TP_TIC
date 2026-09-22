@@ -1,6 +1,7 @@
 import random
 
 def alfabetoYprob(cadena):
+    #dado un STRING devuelve 2 arreglos paralelos ALF y PROB
     alfabeto = []
     repeticiones = []
     for char in cadena:
