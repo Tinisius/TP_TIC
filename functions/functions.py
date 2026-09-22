@@ -72,7 +72,8 @@ def entropiaProbs(probs):
 # PARA GENERAR EXTENSION
 
 def generarExtensionFuente(alfabeto, probabilidades, n):
-    #recibe 2 listas (alfabeto y sus probabilidades) y devuelve una extension de orden N a modo de 2 listas (alfabeto y sus probabilidades)
+    #recibe 2 listas (alfabeto y sus probabilidades(lista o dict, de preferencia lista)) 
+    #y devuelve una extension de orden N a modo de 2 listas (alfabeto y sus probabilidades)
     alfabetoExtendido = []
     probabilidadesExtendido = []
     posiciones = [0] * n
@@ -85,7 +86,8 @@ def generarExtensionFuente(alfabeto, probabilidades, n):
         prob = 1
         for pos in posiciones:
             palabra += alfabeto[pos]
-            prob *= probabilidades[pos]
+            #el ternario distingue si probabilidades es un diccionario o un lista
+            prob *= probabilidades[alfabeto[pos]] if isinstance(probabilidades, dict) else probabilidades[pos]
 
         alfabetoExtendido.append(palabra)
         probabilidadesExtendido.append(round(prob, 4))
@@ -160,38 +162,56 @@ def esUnivoco(codigo):
 
         S = S_nuevo
 
+# GENERAR MATRIZ DE TRANSICION
 
-#MAIN TESTER
+def generarMatrizTrans(mensaje):
+    alfabeto = GenerarAlfabeto(mensaje)
+    N = len(alfabeto)
+    mat = [[0 for _ in range(N)] for _ in range(N)]
 
-TEXTO = "A"
+    for i in range(len(mensaje)):
+        if (i != 0):
+            simbolo = mensaje[i]
+            AntSimbolo = mensaje[i-1]
+            mat[alfabeto.index(AntSimbolo)][alfabeto.index(simbolo)] += 1
 
-#print("PROBS TEXTO: " + str(probabilidadesTexto(TEXTO)))
-#print("ENTROPIA TEXTO: " + str(entropiaTexto(TEXTO)) + "bits")
+    for i in range(N):
+        acumFila = sum(mat[i])
+        if acumFila > 0:
+            for j in range(N):
+                mat[i][j] = round((mat[i][j]) / acumFila, 8)
+    traspuesta = [list(fila) for fila in zip(*mat)]   #traspone la matriz
 
-w = 0.75
-PROBS = [w, 1-w]
+    # MOSTRAR MATRIZ
+    #for charIndex in range(len(GenerarAlfabeto(mensaje))):
+    #    print(alfabeto[charIndex] + " = ", traspuesta[charIndex])
 
-#print("ENTROPIA LISTA PROBS: " + str(entropiaProbs(PROBS)) + " bits")
+    return traspuesta
 
-# P11
-alfabeto_orig = ["x", "y", "z"]
-probs_orig = [0.5, 0.1, 0.4]
-N = 3
+def escribirMatTrans(mensaje):
+    #recibe el mensaje, genera la matriz y la muestra
+    mat = generarMatrizTrans(mensaje)
+    alfabeto = GenerarAlfabeto(mensaje)
 
-"""
-alf_ext, p_ext = generarExtensionFuente(alfabeto_orig, probs_orig, N)
-print("Alfabeto extendido:", alf_ext)
-print("Probabilidades:", p_ext)
+    #significado de cada columna
+    for i in range(len(alfabeto)):
+        print("            " + alfabeto[i], end="")
+    print("\n")
 
-print("EntropiaBASE:", str(entropiaProbs(probs_orig)), " bits")
-print("EntropiaExt:", str(entropiaProbs(p_ext)), " bits")
+    #cada fila
+    for charIndex in range(len(alfabeto)):
+        print(alfabeto[charIndex] + " =  ", end="")
+        for prob in mat[charIndex]:
+            print(f"[{prob:.8f}] ", end="")  
+        print("\n") 
 
-print("comp:", str(entropiaProbs(p_ext)), str(entropiaProbs(probs_orig*N)))
 
-
-codigo = ["100", "101", "10"]
-
-print("es no singular (bueno): " + str(esNoSingular(codigo)))
-"""
-
-fuente = ["a", "bc", "cd", "d"]
+def esMemoriaNula(mensaje):
+    mat = generarMatrizTrans(mensaje)
+    N = len(GenerarAlfabeto(mensaje))
+    for i in range(N):
+        val = mat[i][1]
+        for j in range(N):
+            if (val != mat [i][j]):
+                return False
+    return True

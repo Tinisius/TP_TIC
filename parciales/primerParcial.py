@@ -5,6 +5,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from functions.functions import *
 
+# - - - - - - - - - - - - PARCIAL 1 - - - - - - - - - - - -
+
+#MENSAJE
 mensaje = ";;,;,;:,,,.;,,.,,,::,;;;,:;.,,;:,,,:..;,;;.,;,,.:;"
 
 #probs:
@@ -15,31 +18,23 @@ print("P(.) = " + str(probs["."]))
 print("P(:) = " + str(probs[":"]))
 print("P(;) = " + str(probs[";"]))
 
-#matriz de transicion:
+#matriz de transicion
+escribirMatTrans(mensaje)  #genera y muestra la mat de trans
 
-def generarMatrizTrans(mensaje):
-    alfabeto = GenerarAlfabeto(mensaje)
-    N = len(alfabeto)
-    mat = [[0 for _ in range(N)] for _ in range(N)]
+#tipo de memoria
+print("tipo de memoria de la fuente: ", "Memoria Nula" if esMemoriaNula(mensaje) else "Memoria NO nula (orden 1)")
 
-    for i in range(len(mensaje)):
-        if (i != 0):
-            simbolo = mensaje[i]
-            AntSimbolo = mensaje[i-1]
-            mat[alfabeto.index(AntSimbolo)][alfabeto.index(simbolo)] += 1
+#entropia
+print("entropia: ", entropiaTexto(mensaje))
 
-    for i in range(N):
-        acumFila = sum(mat[i])
-        if acumFila > 0:
-            for j in range(N):
-                mat[i][j] = round((mat[i][j]) / acumFila, 8)
-    traspuesta = [list(fila) for fila in zip(*mat)]   #traspone la matriz
+#extension
+alfabeto = GenerarAlfabeto(mensaje)
+probabilidades = probabilidadesTexto(mensaje)
+alfabetoExtendido, probabilidadesExtendido = generarExtensionFuente(alfabeto, probabilidades, 2)
 
-    # MOSTRAR MATRIZ
-    #for charIndex in range(len(GenerarAlfabeto(mensaje))):
-    #    print(alfabeto[charIndex] + " = ", traspuesta[charIndex])
+P1_INDEX = alfabetoExtendido.index(",;")
+P2_INDEX = alfabetoExtendido.index(":.")
 
-    return traspuesta
-print("\n MATRIZ TRANSICION:")
-
-mat = generarMatrizTrans(mensaje)
+print("P(,;) = " + str(probabilidadesExtendido[P1_INDEX]))
+print("P(:.) = " + str(probabilidadesExtendido[P2_INDEX]))
+print("entropia extension: ", entropiaProbs(probabilidadesExtendido))
