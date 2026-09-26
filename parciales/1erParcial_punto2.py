@@ -24,3 +24,5 @@ escribirMatTrans(mensaje, [",",".",":",";",])
 print("tipo de memoria de la fuente: ", "Memoria Nula" if esMemoriaNula(mensaje) else "Memoria NO nula (orden 1)")
 
 print("entropia: ", entropiaTextoMarkov(mensaje))
+
+print("vector estacionario:", generarVectorEstacionario(generarMatrizTrans(mensaje)))
