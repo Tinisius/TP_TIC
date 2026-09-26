@@ -24,7 +24,7 @@ def informacionTexto(mensaje):
     probs = probabilidadesTexto(mensaje)
     informacion = {
         simbolo: round(-math.log(probs[simbolo], 2), 4) for simbolo in probs    #compresion de listas
-        #math.log(pow(NUM, -1), 2) 
+        #math.log(NUM ** -1), 2) 
         # ES LO MISMO QUE 
         #-math.log(NUM, 2)
     }
@@ -60,11 +60,11 @@ def informacionProbs(probs):
         informacion += -math.log(prob, 2)
     return round(informacion, 4)      #en formato 1.5337
 
-def entropiaProbs(probs):
+def entropiaProbs(probs, base=2):
     #recibe una lista de probabilidades y calcula la entropia total de la fuente
     entropia = 0
     for prob in probs:
-        entropia += prob * -math.log(prob, 2)
+        entropia += prob * -math.log(prob, base)
 
     return round(entropia, 4)     #en formato int ej: 0.9183 BITS/SIMBOLO
 
@@ -127,7 +127,7 @@ def esInstantaneo(codigo):
 def esUnivoco(codigo):
     #recibe una lista de palabras codigo (formato ["100", "101", "10"]) y determina si es Univocamente Decodificable (UD)
 
-    vistos = []  #es un set de conjuntos S, porsi un conjunto se repite no entrar en bucle infinito
+    vistos = set()  #es un set de conjuntos S, porsi un conjunto se repite no entrar en bucle infinito
     S = set()   # inicialmente S1, representa solos los Sn
 
     #comparo el codigo con consigo mismo y genero el S1
@@ -148,7 +148,7 @@ def esUnivoco(codigo):
         if S in vistos: 
             return True
 
-        vistos.add(S)
+        vistos.add(frozenset(S))
 
         S_nuevo = set()
 
