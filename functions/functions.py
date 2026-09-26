@@ -14,7 +14,7 @@ def probabilidadesTexto(mensaje):
             alfabeto.append(char)
             repeticiones.append(1)
 
-    probs = [round(count / len(mensaje), 4) for count in repeticiones]
+    probs = [round(count / len(mensaje), 8) for count in repeticiones]
 
     return dict(zip(alfabeto, probs))   #en formato {"a":0.2346, "b":0.4307}
 
@@ -23,7 +23,7 @@ def informacionTexto(mensaje):
     #recibe un string y calcula la informacion de cada simbolo a modo de diccionario
     probs = probabilidadesTexto(mensaje)
     informacion = {
-        simbolo: round(-math.log(probs[simbolo], 2), 4) for simbolo in probs    #compresion de listas
+        simbolo: round(-math.log(probs[simbolo], 2), 8) for simbolo in probs    #compresion de listas
         #math.log(NUM ** -1), 2) 
         # ES LO MISMO QUE 
         #-math.log(NUM, 2)
@@ -38,7 +38,7 @@ def entropiaTexto(mensaje):
     for simbolo in probs:
         entropia += probs[simbolo] * info[simbolo]
 
-    return round(entropia, 4)     #en formato int ej: 0.9183 
+    return round(entropia, 8)     #en formato int ej: 0.9183 
 
 
 def GenerarAlfabeto(mensaje):
@@ -58,7 +58,7 @@ def informacionProbs(probs):
     informacion = 0
     for prob in probs:
         informacion += -math.log(prob, 2)
-    return round(informacion, 4)      #en formato 1.5337
+    return round(informacion, 8)      #en formato 1.5337
 
 def entropiaProbs(probs, base=2):
     #recibe una lista de probabilidades y calcula la entropia total de la fuente
@@ -66,7 +66,7 @@ def entropiaProbs(probs, base=2):
     for prob in probs:
         entropia += prob * -math.log(prob, base)
 
-    return round(entropia, 4)     #en formato int ej: 0.9183 BITS/SIMBOLO
+    return round(entropia, 8)     #en formato int ej: 0.9183 BITS/SIMBOLO
 
 
 # PARA GENERAR EXTENSION
