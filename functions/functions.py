@@ -19,18 +19,18 @@ def probabilidadesTexto(mensaje):
     return dict(zip(alfabeto, probs))   #en formato {"a":0.2346, "b":0.4307}
 
 
-def informacionTexto(mensaje):
+def informacionTexto(mensaje, r):
     #recibe un string y calcula la informacion de cada simbolo a modo de diccionario
     probs = probabilidadesTexto(mensaje)
     informacion = {
-        simbolo: round(-math.log(probs[simbolo], 2), 4) for simbolo in probs    #compresion de listas
+        simbolo: round(-math.log(probs[simbolo], r), 4) for simbolo in probs    #compresion de listas
         #math.log(pow(NUM, -1), 2) 
         # ES LO MISMO QUE 
         #-math.log(NUM, 2)
     }
     return informacion      #en formato {"a":1.5851, "b":0.4307}
 
-def entropiaTextoMarkov(mensaje):
+def entropiaTextoMarkov(mensaje, r):
     entropia=0
     alfabeto = generarAlfabeto(mensaje)
     matTrans = generarMatrizTrans(mensaje)
@@ -39,20 +39,20 @@ def entropiaTextoMarkov(mensaje):
         Hi = 0
         for j in range(len(alfabeto)):
             if matTrans[i][j] != 0:
-                Hi += matTrans[i][j] * -math.log(matTrans[i][j], 2)
+                Hi += matTrans[i][j] * -math.log(matTrans[i][j], r)
         entropia += vectorEst[i] * Hi
 
     return entropia
 
 
-def entropiaTexto(mensaje):
+def entropiaTexto(mensaje, r):
     #recibe un string y calcula la entropia del mensaje
 
     if not esMemoriaNula(mensaje):
-        return entropiaTextoMarkov(mensaje)
+        return entropiaTextoMarkov(mensaje, r)
 
     probs = probabilidadesTexto(mensaje)
-    info = informacionTexto(mensaje)
+    info = informacionTexto(mensaje, r)
     entropia = 0
     for simbolo in probs:
         entropia += probs[simbolo] * info[simbolo]
@@ -211,7 +211,9 @@ def generarMatrizTrans(mensaje, HardCodedAlfabeto=None):
 
     return mat
 
+#RECORDASTE EL ORDEN?
 def generarVectorEstacionario(matTrans, tolerancia=1e-12, maxIteraciones=100000):
+    #tolerancia = 0.000000000001 11 ceros seguidos de un 1
     if not matTrans or any(len(fila) != len(matTrans) for fila in matTrans):
         raise ValueError("La matriz de transición debe ser cuadrada y no vacía")
 
@@ -267,9 +269,9 @@ def escribirMatTrans(mensaje, HardCodedAlfabeto=None):
 def esMemoriaNula(mensaje):
     mat = generarMatrizTrans(mensaje)
     N = len(generarAlfabeto(mensaje))
-    for i in range(N):
-        val = mat[i][1]
-        for j in range(N):
+    for j in range(N):
+        val = mat[1][j]
+        for i in range(N):
             if (val != mat [i][j]):
                 return False
     return True

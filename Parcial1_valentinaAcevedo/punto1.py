@@ -26,7 +26,7 @@ escribirMatTrans(mensaje, [",",".",":",";"])  #genera y muestra la mat de trans
 print("tipo de memoria de la fuente: ", "Memoria Nula" if esMemoriaNula(mensaje) else "Memoria NO nula (orden 1)")
 
 #entropia
-print("entropia: ", entropiaTexto(mensaje))
+print("entropia: ", entropiaTexto(mensaje, 2))
 
 #extension
 alfabeto = generarAlfabeto(mensaje)
@@ -38,4 +38,4 @@ P2_INDEX = alfabetoExtendido.index(":.")
 
 print("P(,;) = " + str(probabilidadesExtendido[P1_INDEX]))
 print("P(:.) = " + str(probabilidadesExtendido[P2_INDEX]))
-print("entropia extension: ", entropiaProbs(probabilidadesExtendido))
+print("entropia extension: ", entropiaProbs(probabilidadesExtendido, 2))

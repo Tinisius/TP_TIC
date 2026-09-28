@@ -13,7 +13,7 @@ print("entropia: ", entropiaProbs(probsCod, r))
 
 print("longitud media: ", longMediaCod(codigo, probsCod))
 
-print("inecuacion de Kraft-Mcmillan: ", inecKraft(codigo, probsCod,4))
+print("inecuacion de Kraft-Mcmillan: ", inecKraft(codigo, 4))
 
 print("clasificacion:", clasificacion(codigo))
 
