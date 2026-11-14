@@ -13,29 +13,30 @@ mensaje = "LJMMJLMJLJJMLMMLLKJL"
 #CHECKEAR
 #print("MN?:", esMemoriaNula(mensaje))
 
-#print("entropia fuente: ", entropiaTexto(mensaje, 2))
+print("entropia fuente: ", entropiaTexto(mensaje, 2))
 
-#print("tasa de compresion: ", tasaCompresionTexto(mensaje))
+print("tasa de compresion: ", tasaCompresionTexto(mensaje))
 
-#print("long media", longMediaCod(codificacion_huffman(mensaje), probabilidadesTexto(mensaje)))
+print("long media", longMediaCod(codificacion_huffman(mensaje), probabilidadesTexto(mensaje)))
 
-#print("eficiencia: ", eficienciaHuffman(mensaje))
+print("eficiencia: ", eficienciaHuffman(mensaje))
 
-#print("redundancia: ", redundanciaHuffman(mensaje))
+print("redundancia: ", redundanciaHuffman(mensaje))
 
 probabilidades = probabilidadesTexto(mensaje)
 alfabeto = generarAlfabeto(mensaje)
 fuenteExtendida, probabilidadesExtendidas = generarExtensionFuente(alfabeto, probabilidades, 3) #extendemos la fuente de orden 3
 
+#transforma ["aa", "ab", ...] y [0.1, 0.5, ...] en => {"aa": 0.1, "ab": 0.5, ...}
 probabilidadesFuenteExtendida = dict(zip(fuenteExtendida, probabilidadesExtendidas))    #{'LLL': 0.04287499999999999, 'LLJ': 0.03674999999999999, 'LLM': 0.03674999999999999,
 
 codigoHuffmanExtendido = codificacion_huffman_probabilidades(probabilidadesFuenteExtendida) #{'LLL': '0000', 'LLK': '0001000', 'LKL': '0001001',
 
-longMediaExtension = longMediaCod(codigoHuffmanExtendido, probabilidadesFuenteExtendida)
-entropiaExtension = entropiaProbs(probabilidadesExtendidas, 2)
+print("long media extension:", longMediaCod(codigoHuffmanExtendido, probabilidadesFuenteExtendida))
 
-print("long media extension:", longMediaExtension)
+print("eficiencia Extension: ", eficienciaHuffmanProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
+
+print("redundancia Extension: ", redundanciaHuffmanProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
 
 print("FUENTE cumple primer teorema de shannon:", cumplePrimerShannon(mensaje))
-print("EXTENSION cumple primer teorema de shannon:", entropiaExtension <= longMediaExtension < entropiaExtension + 1,
-)
+print("EXTENSION cumple primer teorema de shannon:", cumplePrimerShannonProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))

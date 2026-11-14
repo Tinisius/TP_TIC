@@ -59,7 +59,7 @@ def entropiaTexto(mensaje, r):
 
     return round(entropia, 4)     #en formato int ej: 0.9183 
 
-
+#recibe "LJMMJLMJLJJMLMMLLKJL"
 def generarAlfabeto(mensaje):
     #recibe un string y lista todos sus simbolos fuente
     alfabeto = []
@@ -67,7 +67,7 @@ def generarAlfabeto(mensaje):
         if char not in alfabeto:
             alfabeto.append(char)
 
-    return alfabeto #en formato ["a", "b", "c"]
+    return alfabeto #en formato ['L', 'J', 'M', 'K']
 
 # PARA LISTA DE PROBABILIDADES
 
@@ -80,8 +80,12 @@ def informacionProbs(probs, base=2):
     return round(informacion, 4)      #en formato 1.5337
 
 def entropiaProbs(probs, r):
-    #recibe una lista de probabilidades y calcula la entropia total de la fuente
+    #recibe una lista de probabilidades o un diccionario de probabilidades y calcula la entropia total de la fuente
     entropia = 0
+
+    if isinstance(probs, dict):
+        probs = probs.values()
+    
     for prob in probs:
         entropia += prob * -math.log(prob, r)
 
@@ -305,13 +309,14 @@ def clasificacion(codigo):
         return  "Codigo Univocamente Decodificable (UD)"
     return "Codigo Instantaneo"
 
+#recibe ["/+", "*", "+-", "-", "*/", ]
 def generarAlfabetoCodigo(codigo):
     alfabetoCodigo = []
     for c in codigo:
         for simbolo in c:
             if simbolo not in alfabetoCodigo:
                 alfabetoCodigo.append(simbolo)
-    return alfabetoCodigo
+    return alfabetoCodigo   #devuelve ['/', '+', '*', '-']
 
 def longMediaMinimaHuffman(codigo, probsCod):
     alfabetoCodigo = generarAlfabetoCodigo(codigo)  #["/", "+", "-", "*", ]
