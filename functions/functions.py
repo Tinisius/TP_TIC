@@ -48,8 +48,8 @@ def entropiaTextoMarkov(mensaje, r):
 def entropiaTexto(mensaje, r):
     #recibe un string y calcula la entropia del mensaje
 
-    if not esMemoriaNula(mensaje):
-        return entropiaTextoMarkov(mensaje, r)
+    #if not esMemoriaNula(mensaje):
+    #    return entropiaTextoMarkov(mensaje, r)
 
     probs = probabilidadesTexto(mensaje)
     info = informacionTexto(mensaje, r)
@@ -109,7 +109,7 @@ def generarExtensionFuente(alfabeto, probabilidades, n):
             prob *= probabilidades[alfabeto[pos]] if isinstance(probabilidades, dict) else probabilidades[pos]
 
         alfabetoExtendido.append(palabra)
-        probabilidadesExtendido.append(round(prob, 4))
+        probabilidadesExtendido.append(prob)
 
         # avanzar la posición
         carry = 1
@@ -278,7 +278,13 @@ def esMemoriaNula(mensaje):
 
 # COMPACTITUD
 
+#RECIBE O 2 DICCIONARIOS O 2 LISTAS, NADA DE UNO Y UNO
 def longMediaCod(codigo, probsCod):
+    #si el llamado es long_media_cod({'K': '00', 'J': '01'}, {'K': 0.4, 'J': 0.6})
+    if isinstance(codigo, dict) and isinstance(probsCod, dict):
+        return sum(len(codigo[s]) * probsCod[s] for s in codigo)
+
+    #si el llamado es long_media_cod(['00', '01'], [0.4, 0.6])
     L = 0
     for i in range(len(codigo)):
         L += len(codigo[i])*probsCod[i]

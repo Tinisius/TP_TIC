@@ -1,1 +1,5 @@
-print((1 + 1e-12) )
+from functions.functions import *
+from functions.functions2 import *
+
+mensaje = "LJMMJLMJLJJMLMMLLKJL"
+print(cumplePrimerShannon(mensaje))
