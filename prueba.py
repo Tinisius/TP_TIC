@@ -4,43 +4,40 @@ from functions.functions2 import *
 entrada = "10111101100111101000001010100101"
 salida = "GGHHIIGHGFFGIIFGHGGGGFGGFGGFGFFG"
 
-def columnasProporcionales(matriz, j1, j2, tol=1e-3):
-    filas = len(matriz)
-    k = None            #constante de proporcionalidad
 
-    for i in range(filas):          #por cada FILA comparamos las dos columnas
-        a = matriz[i][j1]
-        b = matriz[i][j2]
+def corregirParidad(mensaje):
+    # armamos las 4 filas de 8 bits
+    filas = []
+    for i in range(0, len(mensaje), 8):             #por cada bloque de 8 bits
+        filas.append([int(b) for b in mensaje[i:i+8]])
 
-        if a == 0 and b == 0:           #ambos cero: no aporta restriccion
-            continue
-        if a == 0 or b == 0:            #uno cero y el otro no: no son proporcionales
-            return False
+    lrc = filas[0]                                  #primera fila: paridad longitudinal
+    datos = filas[1:]                               #resto: caracteres + bit VRC
 
-        if k is None:
-            k = a / b           #fijamos la constante con la primera fila util
-        elif abs(a / b - k) > tol:          #otra fila con distinta razon
-            return False
+    # filas con paridad VRC incorrecta (paridad par: la suma debe ser par)
+    filasMal = []
+    for i in range(len(datos)):                     #por cada FILA de datos
+        if sum(datos[i]) % 2 != 0:
+            filasMal.append(i)
 
-    return True
+    # columnas con paridad LRC incorrecta
+    colsMal = []
+    for j in range(8):                              #por cada COLUMNA
+        suma = 0
+        for i in range(len(datos)):                 #por cada fila de esa columna
+            suma += datos[i][j]
+        if suma % 2 != lrc[j]:
+            colsMal.append(j)
 
-#[[0, 0, 0, 0], [0, 0, 0, 0]]
-def matrizReducida(entrada, salida):
-    matriz = generarMatrizCanal(entrada, salida)
-    
-    a = 0
-    while a < len(matriz[0]):       #por cada columna a (el largo cambia al fusionar)
-        b = a + 1
-        while b < len(matriz[0]):       #todas las columnas por delante de a
-            if columnasProporcionales(matriz, a, b):        #2 columnas proporcionales, juntamos
-                for i in range(len(matriz)):        #por cada FILA sumamos b en a y borramos b
-                    matriz[i][a] += matriz[i][b]
-                    matriz[i].pop(b)
-                #no avanzamos b: la columna siguiente ocupa ahora el lugar de b
-            else:
-                b += 1          #no se fusiono, pasamos a la siguiente
-        a += 1          #pasamos a la siguiente columna base
+    # error simple: la interseccion de fila y columna fallidas
+    if len(filasMal) == 1 and len(colsMal) == 1:
+        datos[filasMal[0]][colsMal[0]] ^= 1         #invertimos el bit
 
-    return matriz
+    # decodificamos los 7 bits de datos de cada fila a ASCII
+    texto = ""
+    for fila in datos:                              #por cada caracter
+        bits = "".join(str(b) for b in fila[:7])
+        texto += chr(int(bits, 2))
+    return texto
 
-print(matrizReducida(entrada, salida))
+print("mensaje corregido: ", corregirParidad(entrada))

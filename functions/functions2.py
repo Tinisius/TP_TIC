@@ -79,8 +79,8 @@ def cumplePrimerShannonProbs(probs:dict, cod:dict):
 
 # - - - - - - - - - - - - CANALES DE TRANSMISION
 
-#entrada = "10111101100111101000001010100101"
-#salida = "GGHHIIGHGFFGIIFGHGGGGFGGFGGFGFFG"
+#entrada = "10111101100111101000001010100101" (len = 32)
+#salida = "GGHHIIGHGFFGIIFGHGGGGFGGFGGFGFFG" (len = 32)
 def generarMatrizCanal(entrada, salida):
     alfEntrada = sorted(generarAlfabeto(entrada))    #['0', '1']
     alfSalida = sorted(generarAlfabeto(salida))    #['F', 'G', 'H', 'I']
@@ -113,7 +113,6 @@ def mostrarMatrizCanal(entrada, salida):
             print(" | ", format(prob, ".4f"), end="")
         print("\n")
 
-    print("\n")
 
 
 def clasificarCanal(matriz, tol=0.000000001):
@@ -148,6 +147,7 @@ def clasificarCanal(matriz, tol=0.000000001):
 
 # - - - - - - - - - - - - METRICAS DEL CANAL
 
+#H(A)
 def entropiaAprioriA(matriz, entrada: str):
     filas = len(matriz) #R
     probsEntrada = [p for _, p in sorted(probabilidadesTexto(entrada).items())]   #ordenado por simbolo
@@ -157,7 +157,6 @@ def entropiaAprioriA(matriz, entrada: str):
         if probsEntrada[i] > 0:
             entropia += probsEntrada[i] *  math.log(1 / probsEntrada[i], 2)
     return entropia
-
 
 #H(A/B)
 def equivocacionCanal(matriz, entrada: str):
@@ -186,8 +185,12 @@ def equivocacionCanal(matriz, entrada: str):
     return equivocacion
 
 #H(B/A)
-def perdidaCanal(matriz, entrada: str):
-    probsEntrada = [p for _, p in sorted(probabilidadesTexto(entrada).items())]   #ordenado por simbolo
+def perdidaCanal(matriz, entrada):
+    if isinstance(entrada, str):
+        probsEntrada = [p for _, p in sorted(probabilidadesTexto(entrada).items())]   #ordenado por simbolo
+    else:
+        probsEntrada = entrada
+
     perdida = 0
     for i in range(len(matriz)):        # por cada FILA (entrada ai)
         entropiaFila = 0
@@ -204,6 +207,7 @@ def informacionMutua(matriz, entrada: str):
 
 # - - - - - - - - - - - - CANAL REDUCIDO
 
+#para reducir la matriz
 def columnasProporcionales(matriz, j1, j2, tol=1e-3):
     filas = len(matriz)
     k = None            #constante de proporcionalidad
@@ -224,6 +228,7 @@ def columnasProporcionales(matriz, j1, j2, tol=1e-3):
 
     return True
 
+#fusionamos columnas proporcionales
 def matrizReducida(entrada, salida):
     matriz = generarMatrizCanal(entrada, salida)
     
@@ -251,11 +256,50 @@ def mostrarMatrizReducida(entrada, salida):
         for prob in matRed[i]:
             print(" | ", format(prob, ".4f"), end="")
         print("\n")
-    print("\n")
 
+#si la matriz es de 2x2 (en general la reducida)
+def capacidadCanal2x2(matriz2x2, pasos=100000):
+    mejorI = 0
+    mejorX = 0
 
+    for k in range(pasos + 1):    #itera por cada posible probabilidad de entrada (a priori):
+        x = k / pasos
+        #defino arbitrariamente que X = P(1) (y 1-X = P(0))
+        probEntrada = [1 - x, x]    #[0.0001, 0.9999] => [0.0003, 0.9997] => ... => [0.9999, 0.0001]
 
+        entropiaSalida = 0  #H(B)
+        for j in range(2):      #por cada COLUMNA (salida bj) P(bj)
+            probSalida = 0
+            for i in range(2):      #por cada FILA de esa columna
+                probSalida += probEntrada[i] * matriz2x2[i][j]      # P(bj) = suma de P(ai) * P(bj/ai) (SE USA PAR CALCULAR H(B))
+            if probSalida > 0:
+                entropiaSalida += probSalida * math.log(1 / probSalida, 2)   #H(B) = suma de P(bj) * log2(1/P(bj))
 
+        # H(B/A) = suma de P(ai) * H(fila i)
+        perdida = 0
+        for i in range(2):                          #por cada FILA (entrada ai)
+            perdida += probEntrada[i] * perdidaCanal(matriz2x2, probEntrada)
+
+        info = entropiaSalida - perdida             #I(A,B) = H(B) - H(B/A) (por simetria es lo mismo que H(A) - H(A/B))
+        if info > mejorI:           #nos quedamos con el maximo
+            mejorI = info
+            mejorX = x
+
+    # P(0) = 1-Max(x) y P(1) = Max(x)  => representa con que valores se encuentra la maxima informacion (capacidad)
+    return mejorI, 1 - mejorX, mejorX       #devuelve C, P(0), P(1)
+
+def probabilidadError(matriz, entrada: str):
+    probsEntrada = [p for _, p in sorted(probabilidadesTexto(entrada).items())]
+    error = 0
+
+    for j in range(len(matriz[0])):                 #por cada COLUMNA (salida bj)
+        conjuntas = []
+        for i in range(len(matriz)):                #por cada FILA de esa columna
+            conjuntas.append(probsEntrada[i] * matriz[i][j])    #P(ai) * P(bj/ai)
+
+        error += sum(conjuntas) - max(conjuntas)    #todo menos la entrada elegida
+
+    return error
 
 
 

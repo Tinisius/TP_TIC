@@ -28,4 +28,12 @@ print("I(A,B) (informacion mutua): ", informacionMutua(mat, entrada))
 
 mostrarMatrizReducida(entrada, salida)
 
-print("capaciadad del canal: ", capacidadCanal)
+capacidadYMaxX = capacidadCanal2x2(matrizReducida(entrada, salida))
+
+print("capacidad del canal reducido: ", capacidadYMaxX[0])
+
+print("P(0): ", capacidadYMaxX[1])
+
+print("P(1): ", capacidadYMaxX[2])
+
+print("P(e) (prob de error): ", probabilidadError(mat, entrada))
