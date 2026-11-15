@@ -1,7 +1,10 @@
-from functions.functions import *
-from functions.functions2 import *
+#from functions.functions import *
+#from functions.functions2 import *
 
-entrada = "10111101100111101000001010100101"
+entrada = "10111101" \
+          "10011110" \
+          "10000010" \
+          "10100101"
 salida = "GGHHIIGHGFFGIIFGHGGGGFGGFGGFGFFG"
 
 
