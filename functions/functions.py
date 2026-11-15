@@ -318,6 +318,7 @@ def generarAlfabetoCodigo(codigo):
                 alfabetoCodigo.append(simbolo)
     return alfabetoCodigo   #devuelve ['/', '+', '*', '-']
 
+#DEPRECADA
 def longMediaMinimaHuffman(codigo, probsCod):
     alfabetoCodigo = generarAlfabetoCodigo(codigo)  #["/", "+", "-", "*", ]
     probsSorted = sorted(probsCod, reverse=True)  #ordena las probabilidades de mayor a menor

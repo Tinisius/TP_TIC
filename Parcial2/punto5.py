@@ -37,3 +37,5 @@ print("P(0): ", capacidadYMaxX[1])
 print("P(1): ", capacidadYMaxX[2])
 
 print("P(e) (prob de error): ", probabilidadError(mat, entrada))
+
+print("mensaje corregido: ", corregirParidad(entrada))

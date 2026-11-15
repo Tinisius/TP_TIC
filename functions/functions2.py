@@ -1,5 +1,6 @@
 from functions.functions import *
 
+#comparamos cuando ocupa cada caracter en ascii (8bits) respecto a cuando ocuparia con huffman
 def tasaCompresionTexto(mensaje):
     sinComprimir = len(mensaje)*8
     
@@ -48,21 +49,25 @@ def codificacion_huffman_probabilidades(probabilidades: dict):
 
 # - - - - - - - - - - - - EFICIENCIA Y REDUNDANCIA
 
+#se llama eficiencia huffman ya que solo con el mensaje no hay codificacion, proponemos huffman
 def eficienciaHuffman(mensaje):
     entropia = entropiaTexto(mensaje,2)
     longMediaHuffman = longMediaCod(codificacion_huffman(mensaje), probabilidadesTexto(mensaje))
     return entropia / longMediaHuffman
 
+#se llama redundancia huffman ya que solo con el mensaje no hay codificacion, proponemos huffman
 def redundanciaHuffman(mensaje):
     return 1 - eficienciaHuffman(mensaje)
 
-def eficienciaHuffmanProbs(probs:dict, cod:dict):
+#eficiencia = H(S)/L
+def eficienciaProbs(probs:dict, cod:dict):
     longMedia = longMediaCod(cod, probs)
     entropia = entropiaProbs(probs, 2)
     return entropia / longMedia
 
-def redundanciaHuffmanProbs(probs:dict, cod:dict):
-    return 1 - eficienciaHuffmanProbs(probs, cod)
+#redundancia = 1 - eficiencia
+def redundanciaProbs(probs:dict, cod:dict):
+    return 1 - eficienciaProbs(probs, cod)
 
 # - - - - - - - - - - - - PRIMER TEOREMA SHANNON
 
@@ -288,13 +293,14 @@ def capacidadCanal2x2(matriz2x2, pasos=100000):
     # P(0) = 1-Max(x) y P(1) = Max(x)  => representa con que valores se encuentra la maxima informacion (capacidad)
     return mejorI, 1 - mejorX, mejorX       #devuelve C, P(0), P(1)
 
+#qué tan seguido te equivocas al adivinar la entrada cuando solo ves la salida
 def probabilidadError(matriz, entrada: str):
     probsEntrada = [p for _, p in sorted(probabilidadesTexto(entrada).items())]
     error = 0
 
-    for j in range(len(matriz[0])):                 #por cada COLUMNA (salida bj)
-        conjuntas = []
-        for i in range(len(matriz)):                #por cada FILA de esa columna
+    for j in range(len(matriz[0])):         #por cada COLUMNA (salida bj)
+        conjuntas = []      #probabilidades conjuntas de esa columna, es decir P(ai) * P(bj/ai)
+        for i in range(len(matriz)):        #por cada FILA de esa columna
             conjuntas.append(probsEntrada[i] * matriz[i][j])    #P(ai) * P(bj/ai)
 
         error += sum(conjuntas) - max(conjuntas)    #todo menos la entrada elegida
@@ -302,6 +308,40 @@ def probabilidadError(matriz, entrada: str):
     return error
 
 
+# - - - - - - - - - - - - CORREGIR CON LRC Y VRC
 
+#LRC Y VRC, busca interseccion e invierte el bit
+def corregirParidad(mensaje):
+    # armamos las 4 filas de 8 bits
+    filas = []
+    for i in range(0, len(mensaje), 8):             #por cada bloque de 8 bits
+        filas.append([int(b) for b in mensaje[i:i+8]])
 
+    lrc = filas[0]                                  #primera fila: paridad longitudinal
+    datos = filas[1:]                               #resto: caracteres + bit VRC
 
+    # filas con paridad VRC incorrecta (paridad par: la suma debe ser par)
+    filasMal = []
+    for i in range(len(datos)):                     #por cada FILA de datos
+        if sum(datos[i]) % 2 != 0:
+            filasMal.append(i)
+
+    # columnas con paridad LRC incorrecta
+    colsMal = []
+    for j in range(8):                              #por cada COLUMNA
+        suma = 0
+        for i in range(len(datos)):                 #por cada fila de esa columna
+            suma += datos[i][j]
+        if suma % 2 != lrc[j]:
+            colsMal.append(j)
+
+    # error simple: la interseccion de fila y columna fallidas
+    if len(filasMal) == 1 and len(colsMal) == 1:
+        datos[filasMal[0]][colsMal[0]] ^= 1         #invertimos el bit
+
+    # decodificamos los 7 bits de datos de cada fila a ASCII
+    texto = ""
+    for fila in datos:                              #por cada caracter
+        bits = "".join(str(b) for b in fila[:7])
+        texto += chr(int(bits, 2))
+    return texto

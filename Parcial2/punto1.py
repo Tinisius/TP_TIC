@@ -34,9 +34,10 @@ codigoHuffmanExtendido = codificacion_huffman_probabilidades(probabilidadesFuent
 
 print("long media extension:", longMediaCod(codigoHuffmanExtendido, probabilidadesFuenteExtendida))
 
-print("eficiencia Extension: ", eficienciaHuffmanProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
+print("eficiencia Extension: ", eficienciaProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
 
-print("redundancia Extension: ", redundanciaHuffmanProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
+print("redundancia Extension: ", redundanciaProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
 
 print("FUENTE cumple primer teorema de shannon:", cumplePrimerShannon(mensaje))
+
 print("EXTENSION cumple primer teorema de shannon:", cumplePrimerShannonProbs(probabilidadesFuenteExtendida, codigoHuffmanExtendido))
