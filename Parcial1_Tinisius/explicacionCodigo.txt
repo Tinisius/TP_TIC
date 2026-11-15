@@ -1,0 +1,18 @@
+ Para generar la matriz recorro todo el mensaje guardando el simbolo actual y el anterior, uso el inidice del simbolo y su anterior para indicar la cantidad de veces que transiciona de un simbolo a otro, y normalizo la matriz (ya que la suma de las probabilidades salientes debe de ser 1)
+ Analisis: podemos ver que, por ej la prob de ir de B a A es nula, se ve claramente
+ Para determinar si es de memoria nula generamos un vector con las diferencias entre el maximo y el minimo de cada fila de la matriz luego verificamos que la Maxima diferencia del vector generado sea menor que la tolerancia
+para generar el vector estacionario me aseguro que sea conexa, luego genero un vector uniforme (V1) y por cada iteracion 
+ Analisis: al ser fuente con memoria nos dice, por ej, que hay algunos simobolos que nunca pueden transicionar de un a otro (de B a A por ej)
+Para generar la extension uso un vector de N posiciones donde cada posicion representa el indice del simbolo que quiero concatenar a la palabra, genero la palabra usando esa pos como indice y avanzo la palabra, para avanzar la palabra hago una especie de "suma binaria" solo que es Q-aria (genera carry al llegar a q)
+ Analisis: genera una extension comun y corriente como vimos en las practicas
+ Para calcular la entropia del codigo calculamos la suma de cada una de las entropias de cada simbolo siendo la entropia de cada simbolo como la probabilidad por la infomacion del mismo
+ Analisis: considero que es un error calcular la entropia de la fuente extendida siendo ésta fuente con memoria, esto genera que no coincida con H * n
+
+  Para calcular sumatoria de kraft calculo la suma de cada r elevado a la -longitud de cada palabra codigo
+ Analisis: una sumatoria == 1 (debe ser menor o igual a 1) nos indica que PUEDE existir un codigo instantantaneo con esas longitudes
+ Para calcular la entropia del codigo calculamos la suma de cada una de las entropias de cada simbolo siendo la entropia de cada simbolo como la probabilidad por la infomacion del mismo
+ Analisis: Es valor medio de la información por símbolo suministrada por la fuente, es decir cada simbolo entra en promedio unos 1.3333 binits de informacion
+Para calcular la longitud media del codigo simplemente calculamos la suma ponderada de las longitudes de cada palabra codigo
+ Analisis: nos indica en promedio cuantos simbolos seran necesarios para representar una palabra fuente codificada, ademas, al ser EXACTAMENTE igual a la entropia no indica que, de ser UD estariamos en presencia de un codigo compacto (el mas compacto posible de hecho)
+ Para ser compacto debe ser UD y cumplir la cota de compactitud en todas sus palabras codigo, para verificar que sea UD utilizo el algoritmo de sardinas patterson, ademas, verifico que cada una de las palabras codigo cumpla ser menor que la cota de compactitud, siento ésta: techo(LOGr(1/prob[i]))
+ Analisis: al NO SER UD (por ej: CA puede ser tanto S1 como S2+S5) se determina automaticamente que NO es compacto, ni siquiera hace falta validad la cota

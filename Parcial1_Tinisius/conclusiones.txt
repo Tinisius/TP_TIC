@@ -1,0 +1,3 @@
+la longitud media nos indica en promedio cuantos simbolos simbolos seran necesarios para reprensentar una palabra fuente codificada
+la entropia de una palabra
+    el vector estacionario nos indica a que valor probabilistico converge cada palabra codigo luego de que la fuente emita simbolos por suficiente tiempo
