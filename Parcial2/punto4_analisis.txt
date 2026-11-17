@@ -1,5 +1,0 @@
-El primer teorema de Shannon dice que mientras se codifique la extensión de orden n de un alfabeto fuente con un n tendiendo a infinito, la longitud
-media por símbolo del alfabeto fuente original tenderá a ser la ideal, es decir, igual a la entropía de la fuente. En otras palabras, la compresión se volverá
-más eficiente. Esto es evidenciado en rendimiento obtenido para cada código, el cual es un índice de qué tan cerca está la longitud media del límite. EI
-rendimiento de la extensión de orden 3 es más cercano a 1 que el de extensión de orden 1. Como el rendimiento es H(S)/L, un resultado más cercano a 1
-implica que L está más cerca de H(S).

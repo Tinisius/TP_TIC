@@ -270,13 +270,13 @@ def escribirMatTrans(mensaje, HardCodedAlfabeto=None):
         print("\n") 
 
 
-def esMemoriaNula(mensaje):
+def esMemoriaNula(mensaje, tol=0.001):
     mat = generarMatrizTrans(mensaje)
     N = len(generarAlfabeto(mensaje))
     for j in range(N):
         val = mat[1][j]
         for i in range(N):
-            if (val != mat [i][j]):
+            if (abs(val - mat [i][j]) > tol):
                 return False
     return True
 
@@ -332,7 +332,19 @@ def longMediaMinimaHuffman(codigo, probsCod):
         L += probsSorted[i] * longPalabraCod
     return L
 
-def esCompacto(codigo, probsCod, tolerancia=0.000000001):
+#deprecada
+def esCompacto_Deprecada(codigo, probsCod, tolerancia=0.000000001):
     esMin =  (longMediaCod(codigo, probsCod) - longMediaMinimaHuffman(codigo, probsCod)) < tolerancia
     return esUnivoco(codigo) and esMin
-    
+
+#acepta lista y diccionario
+def esCompacto(codigo, probs):
+    from functions.functions2 import codificacion_huffman_probabilidades
+    if isinstance(probs, dict):                     #si vienen como dict, usamos sus claves
+        d = probs
+        L = longMediaCod(codigo, probs)
+    else:
+        d = {i: p for i, p in enumerate(probs)}
+        L = longMediaCod(codigo, probs)
+    lHuff = longMediaCod(codificacion_huffman_probabilidades(d), d)
+    return esInstantaneo(list(codigo.values()) if isinstance(codigo, dict) else codigo) and abs(L - lHuff) < 1e-9

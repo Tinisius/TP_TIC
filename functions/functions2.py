@@ -118,8 +118,6 @@ def mostrarMatrizCanal(entrada, salida):
             print(" | ", format(prob, ".4f"), end="")
         print("\n")
 
-
-
 def clasificarCanal(matriz, tol=0.000000001):
     filas = len(matriz)     #cantidad de filas
     cols = len(matriz[0])   #cantidad de columnas
@@ -264,6 +262,10 @@ def mostrarMatrizReducida(entrada, salida):
 
 #si la matriz es de 2x2 (en general la reducida)
 def capacidadCanal2x2(matriz2x2, pasos=100000):
+    if len(matriz2x2) != 2 or len(matriz2x2[0]) != 2:
+        print("LAS DIMENSIONES DEBEN SER 2x2")
+        return -1
+    
     mejorI = 0
     mejorX = 0
 
@@ -281,9 +283,7 @@ def capacidadCanal2x2(matriz2x2, pasos=100000):
                 entropiaSalida += probSalida * math.log(1 / probSalida, 2)   #H(B) = suma de P(bj) * log2(1/P(bj))
 
         # H(B/A) = suma de P(ai) * H(fila i)
-        perdida = 0
-        for i in range(2):                          #por cada FILA (entrada ai)
-            perdida += probEntrada[i] * perdidaCanal(matriz2x2, probEntrada)
+        perdida = perdidaCanal(matriz2x2, probEntrada)
 
         info = entropiaSalida - perdida             #I(A,B) = H(B) - H(B/A) (por simetria es lo mismo que H(A) - H(A/B))
         if info > mejorI:           #nos quedamos con el maximo
@@ -310,7 +310,7 @@ def probabilidadError(matriz, entrada: str):
 
 # - - - - - - - - - - - - CORREGIR CON LRC Y VRC
 
-#LRC Y VRC, busca interseccion e invierte el bit
+#LRC Y VRC, busca interseccion e invierte el bit (ASUME PARIDAD PAR)
 def corregirParidad(mensaje):
     # armamos las 4 filas de 8 bits
     filas = []

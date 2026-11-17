@@ -1,0 +1,32 @@
+a- para obtener las probabilidades a priori calculamos la cantidad de ocurrencias de cada simbolo y las dividimos por la cantidad total de simbolos, para calcular la matriz del canal y inicializamos la matriz en 0, luego cuenta pares (entrada[i], salida[i]) y normaliza la matriz
+
+Analisis: podemos ver que el 1 tiene mas probabilidades de aparece que el 0, ademas, la matriz del canal no dice que, dado un simbolo de entrada, cual es su probabilidad de recibirce como cada simbolo de salida, por ejemplo dado un 0 sabemos que nunca podremos recibir una C o una D
+
+
+b- Para ver si es sin ruido, la matriz en cada columna solamente debe haber un elemento distinto de 0. Para ver si es determinante, en cada fila solamente debe haber un elemento distinto de 0.
+
+Analisis: dado que no cumple ninguna de estas condiciones determinamos que no teiene clasificacion
+
+
+c- para calcular la equivocación H(A/B) calculamos teorema de Bayes por columna
+para la pérdida H(B/A) calculamos la suma de la entropía de cada fila ponderada por P(ai)
+para la información mutua I(A,B) calculamos H(A)-H(A/B) siendo H(A) la suma de la probabilidad de entrada de cada simbolo por su cantidad de informacion
+
+Analisis: la equivocación nos dice "la informacion que queda en A despues de Observar B" y representa el ruido
+la perdida no dice "la incertidumbre que queda en B cuando ya se conoce A"
+la informacion mutua representa la cantidad de informacion que atraviesa con exito el canal
+
+
+d- para reducir la matriz de canal fusionamos todas las columas que sea proporcionales con otra columna, recorremos cada columna y por cada una de las siguientes verificamos si la relacion entre cada una de los indices de esas columnas tiene la misma relacion K
+
+analsis: podemos simplificar el sistema sin perder capacidad ni informacion mutua, revelando que algunos simbolos son redundantes (ambas columnas proporcionales transportan la misma informacion de la entrada)
+
+
+e- para determinar la capacidad del canal itero sobre "todas" las posibles combinaciones de probabilidades de entrada y para cada una de ellas calculo su Informacion mutua, si encuentro una informacion mas grande, la guardo junto a sus respectivas probabilidades de entrada
+para calcular la probabilidad de error calculamos las probabilidaes conjuntas de cada elemento de cada columna, determinanmos la salida correcta con max() y asumimos todo lo demas como error (de esa columna), calulamos la suma de cada columna y tenemos la probabilidad de error
+
+Analisis: nos dice cuales tendria que ser las probabilidades de entrada para que la informacion mutua del canal sea maxima, ese valor maximo nos dice la capacidad, no derivamos porque es mas dificil y con aproximacion obtenemos un muy buen resultado
+la probabilidad de error nos dice qué tan seguido te equivocás al adivinar la entrada cuando solo ves la salida
+
+
+f- para corregir errores usamos VRC y LRC de paridad par

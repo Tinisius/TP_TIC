@@ -6,5 +6,3 @@ entrada = "10111101" \
           "10000010" \
           "10100101"
 salida = "aaaaaaaaa"
-
-print(codificacion_huffman(salida))

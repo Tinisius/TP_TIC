@@ -10,9 +10,6 @@ from functions.functions2 import *
 
 mensaje = "LJMMJLMJLJJMLMMLLKJL"
 
-#CHECKEAR
-#print("MN?:", esMemoriaNula(mensaje))
-
 print("entropia fuente: ", entropiaTexto(mensaje, 2))
 
 print("tasa de compresion: ", tasaCompresionTexto(mensaje))

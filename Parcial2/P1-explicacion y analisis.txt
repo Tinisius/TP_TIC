@@ -1,0 +1,28 @@
+a- para obtener las probabilidades de los simbolos dividimos la cantidad de repeticiones de cada simbolo y lo dividimos por la cantidad total de simbolos emitidos, al calcular la suma de la probabilidad por su cantidad de informacion de cada simbolo obtenemos la entropia de la fuente
+
+Analsis: la entropia nos dice que necesitaremos una cantidad media de 1.7883 binits para poder representar el mensaje, asu como el valor medio de incertidumbre antes de conocer la salida
+
+
+b- para generar un codigo binario optimo usamos el algoritmo de huffman presentado en la catedra, vamos agrupando los 2 conjuntos de simbolos de menos probabilidad y asignando 1 y 0 hasta que quede un solo grupo
+
+Analisis: podemos ver que los simbolos con mayor probabilidad tienen las codificacion mas cortas, esto se debe al costo de transmision de la informacion (minimizando la longitud media)
+
+
+c- para determinar la tasa de compresion calculamos la relacion de cuanto ocuparia almacenar todos los simbolos en ascii (8 bits * cant simbolos) respecto a cuanto ocupa con huffman, esto coincide con 8 / longMediaHuffman
+
+Analsis: podemos ver que la tasa de compresion es de 4:1, esto significa que, al no usar la codificacion ascii (capaz de representar simbolos que no usamos) podemos utilizar 4 veces menos bits por simbolo (disminuye longitud media)
+
+
+d- Para generar la extension uso un vector de N posiciones donde cada posicion representa el indice del simbolo que quiero concatenar a la palabra, genero la palabra usando esa pos como indice y avanzo la palabra, para avanzar la palabra hago una especie de "suma binaria" solo que es Q-aria (genera carry al llegar a q), luego codificamos con huffman de la misma forma que hicimos en el puntoB
+
+Analisis: podemos ver que, al tener muchos mas simbolos debemos usar una codificacion mucho mas larga por cada simbolo (pero estos tienen menos probabilidad)
+
+
+e- Para calcular la longitud media simplemente calculamos la suma de la longitud de cada palabra codigo por su probabilidad, su eficiencia es la relacion de la entropia sobre su longitud media y su redundancia es el complemento de ésta
+
+Analisis: podemos ver que la eficiencia de la extension es muy superior a la del codigo original (y por enede la redundancia tambien sera mucho menor), esto verifica la deduccion de este teorema, que nos dice que cuanto mayor sea la extension, mayor sera su similitud con la entropia (cota superior H + 1/n)
+
+
+f- simplemente verificamos que la longitud media esté entre la entropia y ésta misma + 1
+
+Analsis: dato que tanto la codificacion del primer codigo como su extension fueron codificados usando huffman (codigo compacto), ambos deben cumplir el Primer Teorema de Shannon
